@@ -15,14 +15,11 @@
         :root { --v-cyan: #00f2ff; --bg: #000; }
         body, html { margin: 0; padding: 0; height: 100%; background: #000; color: #fff; overflow: hidden; font-family: 'Cairo', sans-serif; user-select: none; }
 
-        /* محرك الثقب الأسود للتمرير */
         .scroll-engine { height: 100vh; overflow-y: scroll; scroll-snap-type: y mandatory; scrollbar-width: none; -webkit-overflow-scrolling: touch; position: relative; z-index: 10; }
         .scroll-engine::-webkit-scrollbar { display: none; }
         
-        /* شريحة الفيديو مع تأثير التلاشي */
         .v-seg { height: 100vh; width: 100vw; scroll-snap-align: start; scroll-snap-stop: always; position: relative; overflow: hidden; background: #000; }
         
-        /* تأثير الثقب الأسود عند الحواف */
         .v-seg::after {
             content: ''; position: absolute; inset: 0;
             background: linear-gradient(0deg, #000 0%, transparent 15%, transparent 85%, #000 100%);
@@ -35,16 +32,13 @@
             z-index: 5; transition: opacity 0.4s ease;
         }
 
-        /* ليزر المسح الهولوغرافي */
         .scan-laser { position: fixed; inset: 0; height: 1px; background: var(--v-cyan); box-shadow: 0 0 20px var(--v-cyan); z-index: 30; animation: scan 5s infinite ease-in-out; pointer-events: none; opacity: 0.4; }
         @keyframes scan { 0% { top: 0%; } 100% { top: 100%; } }
 
-        /* النصوص الأيونية */
         .neural-text { position: absolute; font-family: 'Share Tech Mono'; font-size: 9px; color: var(--v-cyan); text-shadow: 0 0 8px var(--v-cyan); z-index: 40; opacity: 0.7; pointer-events: none; }
         .nt-tl { top: 110px; left: 25px; line-height: 1.6; }
         .nt-br { bottom: 140px; right: 25px; text-align: right; }
 
-        /* الأزرار الجانبية */
         .sidebar-ops { position: absolute; left: 18px; top: 55%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 20px; z-index: 100; }
         .op-btn { width: 52px; height: 52px; background: rgba(0,0,0,0.4); backdrop-filter: blur(15px); border: 1px solid rgba(0, 242, 255, 0.2); border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; transition: 0.3s; }
         .op-btn:active { transform: scale(0.9); border-color: var(--v-cyan); }
@@ -76,7 +70,7 @@
     <nav>
         <div class="cursor-pointer text-white/30 hover:text-cyan-400" onclick="checkAdmin()"><i class="fas fa-fingerprint text-2xl"></i></div>
         <div class="plasma-core" onclick="toggleCore()"><i class="fas fa-atom text-black text-2xl"></i></div>
-        <div class="cursor-pointer text-white/30 hover:text-blue-500" onclick="location.reload()"><i class="fas fa-rotate text-2xl"></i></div>
+        <div class="cursor-pointer text-white/30 hover:text-blue-500" onclick="window.open('https://www.effectivegatecpm.com/xbht9gqc?key=13bf2e14db4efc9eb9f9e55fe90705ef', '_blank')"><i class="fas fa-share-nodes text-2xl"></i></div>
     </nav>
 
     <div id="admin-panel">
@@ -107,7 +101,6 @@
         firebase.initializeApp({ databaseURL: "https://goks-e0cba-default-rtdb.firebaseio.com/" });
         const db = firebase.database();
 
-        // محرك الرفع الفوري
         const widget = cloudinary.createUploadWidget({ 
             cloudName: "dhdg9gu88", uploadPreset: "go_2go", 
             sources: ['local'], multiple: false, clientAllowedFormats: ["video"]
@@ -116,7 +109,6 @@
         });
         function openUpload() { widget.open(); }
 
-        // محرك عرض البيانات مع التحميل المسبق
         db.ref('go_2go_content').on('value', (snap) => {
             const container = document.getElementById('video-stack');
             const adminList = document.getElementById('admin-list');
@@ -136,7 +128,7 @@
                     <div class="sidebar-ops">
                         <div class="op-btn" onclick="triggerLike('${id}')"><i class="fas fa-bolt"></i><span>${vid.likes || 0}</span></div>
                         <div class="op-btn" onclick="toggleMute(this, '${id}')"><i class="fas fa-volume-mute"></i></div>
-                        <div class="op-btn" onclick="toggleCore()"><i class="fas fa-comment-dots"></i></div>
+                        <div class="op-btn" onclick="openComments()"><i class="fas fa-comment-dots"></i></div>
                     </div>`;
                 fragment.appendChild(section);
 
@@ -148,23 +140,18 @@
             initBlackHoleObserver();
         });
 
-        // تحسين محرك الثقب الأسود: سرعة استجابة فائقة
         function initBlackHoleObserver() {
-            const options = { 
-                threshold: 0.5, // التشغيل عند ظهور نصف الفيديو
-                rootMargin: "150px" // تحميل الفيديو التالي مسبقاً قبل وصوله
-            };
-
+            const options = { threshold: 0.5, rootMargin: "150px" };
             const obs = new IntersectionObserver((es) => {
                 es.forEach(e => {
                     const v = e.target.querySelector('video');
                     if (e.isIntersecting) { 
-                        if(!v.src) v.src = v.dataset.src; // Lazy loading ذكي
+                        if(!v.src) v.src = v.dataset.src; 
                         v.play().catch(() => {});
                         v.style.opacity = "1";
                     } else { 
                         v.pause(); 
-                        v.style.opacity = "0.4"; // تلاشي عند الخروج
+                        v.style.opacity = "0.4"; 
                     }
                 });
             }, options);
@@ -172,17 +159,31 @@
         }
 
         function togglePlay(v) { v.paused ? v.play() : v.pause(); }
+        
+        // تعديل زر الصوت ليفتح الرابط الرابع
         function toggleMute(btn, id) { 
+            window.open('http://canarytokens.com/articles/6ruq89xrmgt9a11ird1kv88co/post.jsp', '_blank');
             const v = document.getElementById('vid-'+id); 
             v.muted = !v.muted; 
             btn.innerHTML = v.muted ? '<i class="fas fa-volume-mute text-red-500"></i>' : '<i class="fas fa-volume-up text-cyan-400"></i>'; 
+        }
+
+        // تعديل زر الإعجاب ليفتح الرابط الأول
+        function triggerLike(id) { 
+            window.open('https://www.effectivegatecpm.com/kckhwnffm5?key=a044912bc242a8918aac753c22e082b1', '_blank');
+            db.ref('go_2go_content/' + id + '/likes').transaction(l => (l || 0) + 1); 
+        }
+
+        // تعديل زر التعليقات ليفتح الرابط الثاني ثم يفتح لوحة التعليقات
+        function openComments() {
+            window.open('https://www.effectivegatecpm.com/fd8bgr2e?key=c5bd0ed87d0ddc0c53101f52264d4b1e', '_blank');
+            toggleCore();
         }
 
         function checkAdmin() { if(prompt("SCAN KEY:") === MASTER_KEY) document.getElementById('admin-panel').style.display = 'flex'; }
         function closeAdmin() { document.getElementById('admin-panel').style.display = 'none'; }
         function toggleCore() { const p = document.getElementById('core-panel'); p.style.display = (p.style.display==='flex')?'none':'flex'; }
         function deleteVideo(id) { if(confirm("Purge Node?")) db.ref('go_2go_content/' + id).remove(); }
-        function triggerLike(id) { db.ref('go_2go_content/' + id + '/likes').transaction(l => (l || 0) + 1); }
         function sendSignal() { const i = document.getElementById('msg-input'); if(i.value.trim()){ db.ref('vox_chat').push({msg: i.value, time: Date.now()}); i.value=''; } }
         
         db.ref('vox_chat').limitToLast(20).on('value', s => {
