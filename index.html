@@ -15,55 +15,46 @@
         :root { --v-cyan: #00f2ff; --bg: #000; }
         body, html { margin: 0; padding: 0; height: 100%; background: #000; color: #fff; overflow: hidden; font-family: 'Cairo', sans-serif; user-select: none; }
 
+        /* محرك الثقب الأسود للتمرير */
         .scroll-engine { height: 100vh; overflow-y: scroll; scroll-snap-type: y mandatory; scrollbar-width: none; -webkit-overflow-scrolling: touch; position: relative; z-index: 10; }
         .scroll-engine::-webkit-scrollbar { display: none; }
         
         .v-seg { height: 100vh; width: 100vw; scroll-snap-align: start; scroll-snap-stop: always; position: relative; overflow: hidden; background: #000; }
         
+        /* طبقة التلاشي السينمائي (Black Hole Fade) */
         .v-seg::after {
             content: ''; position: absolute; inset: 0;
-            background: linear-gradient(0deg, #000 0%, transparent 15%, transparent 85%, #000 100%);
+            background: linear-gradient(0deg, #000 0%, transparent 20%, transparent 80%, #000 100%);
             z-index: 10; pointer-events: none;
         }
         
         video { 
             position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; 
-            filter: brightness(0.8) contrast(1.1); 
-            z-index: 5; transition: opacity 0.4s ease;
+            filter: brightness(0.85) contrast(1.1); 
+            z-index: 5; transition: opacity 0.6s ease;
         }
 
-        .scan-laser { position: fixed; inset: 0; height: 1px; background: var(--v-cyan); box-shadow: 0 0 20px var(--v-cyan); z-index: 30; animation: scan 5s infinite ease-in-out; pointer-events: none; opacity: 0.4; }
-        @keyframes scan { 0% { top: 0%; } 100% { top: 100%; } }
+        .scan-laser { position: fixed; inset: 0; height: 2px; background: rgba(0, 242, 255, 0.15); box-shadow: 0 0 15px var(--v-cyan); z-index: 30; animation: scan 6s infinite linear; pointer-events: none; }
+        @keyframes scan { 0% { top: -5%; } 100% { top: 105%; } }
 
-        .neural-text { position: absolute; font-family: 'Share Tech Mono'; font-size: 9px; color: var(--v-cyan); text-shadow: 0 0 8px var(--v-cyan); z-index: 40; opacity: 0.7; pointer-events: none; }
-        .nt-tl { top: 110px; left: 25px; line-height: 1.6; }
-        .nt-br { bottom: 140px; right: 25px; text-align: right; }
+        .sidebar-ops { position: absolute; left: 18px; top: 55%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 22px; z-index: 100; }
+        .op-btn { width: 54px; height: 54px; background: rgba(0,0,0,0.5); backdrop-filter: blur(15px); border: 1px solid rgba(0, 242, 255, 0.2); border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; transition: 0.3s; }
+        .op-btn i { font-size: 19px; color: var(--v-cyan); filter: drop-shadow(0 0 5px var(--v-cyan)); }
+        .op-btn span { font-size: 9px; font-family: 'Share Tech Mono'; color: #fff; margin-top: 3px; }
 
-        .sidebar-ops { position: absolute; left: 18px; top: 55%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 20px; z-index: 100; }
-        .op-btn { width: 52px; height: 52px; background: rgba(0,0,0,0.4); backdrop-filter: blur(15px); border: 1px solid rgba(0, 242, 255, 0.2); border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; transition: 0.3s; }
-        .op-btn:active { transform: scale(0.9); border-color: var(--v-cyan); }
-        .op-btn i { font-size: 18px; color: var(--v-cyan); }
-        .op-btn span { font-size: 10px; font-family: 'Share Tech Mono'; color: #fff; margin-top: 2px; }
+        nav { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 410px; height: 75px; background: rgba(0, 5, 12, 0.85); backdrop-filter: blur(30px); border: 1px solid rgba(0, 242, 255, 0.1); border-radius: 40px; display: flex; justify-content: space-around; align-items: center; z-index: 500; }
+        .plasma-core { width: 75px; height: 75px; background: var(--v-cyan); border-radius: 50%; margin-top: -45px; display: flex; align-items: center; justify-content: center; border: 5px solid #000; box-shadow: 0 0 30px var(--v-cyan); cursor: pointer; }
 
-        header { position: fixed; top: 30px; left: 20px; right: 20px; z-index: 500; display: flex; justify-content: space-between; align-items: center; pointer-events: none; }
-        .brand-box { background: rgba(0,0,0,0.5); padding: 8px 15px; border-right: 3px solid var(--v-cyan); backdrop-filter: blur(10px); pointer-events: auto; }
-
-        nav { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 400px; height: 70px; background: rgba(0, 5, 12, 0.85); backdrop-filter: blur(25px); border: 1px solid rgba(0, 242, 255, 0.15); border-radius: 35px; display: flex; justify-content: space-around; align-items: center; z-index: 500; }
-        .plasma-core { width: 70px; height: 70px; background: var(--v-cyan); border-radius: 50%; margin-top: -40px; display: flex; align-items: center; justify-content: center; border: 4px solid #000; box-shadow: 0 0 25px var(--v-cyan); cursor: pointer; }
-
-        #core-panel, #admin-panel { position: fixed; inset: 0; z-index: 2000; background: rgba(0, 0, 0, 0.98); display: none; flex-direction: column; padding: 40px 25px; border-top: 4px solid var(--v-cyan); overflow-y: auto; }
-        
-        /* تصميم صورة الفيديو المصغرة في لوحة التحكم */
-        .admin-thumb { width: 50px; height: 50px; object-fit: cover; border-radius: 8px; border: 1px solid var(--v-cyan); }
+        #core-panel, #admin-panel { position: fixed; inset: 0; z-index: 2000; background: rgba(0, 0, 0, 0.98); display: none; flex-direction: column; padding: 40px 25px; border-top: 5px solid var(--v-cyan); overflow-y: auto; }
     </style>
 </head>
 <body>
 
     <div class="scan-laser"></div>
     
-    <header>
-        <div class="brand-box">
-            <span class="font-[Orbitron] text-[10px] font-black tracking-[4px] text-cyan-400">BLACK_HOLE_V19</span>
+    <header class="fixed top-8 left-6 right-6 z-[500] flex justify-between items-center pointer-events-none">
+        <div class="bg-black/60 p-3 border-r-4 border-cyan-400 backdrop-blur-md pointer-events-auto">
+            <span class="font-[Orbitron] text-[11px] tracking-[3px]">BLACK_HOLE_V19</span>
         </div>
         <div class="font-mono text-[10px] text-cyan-400 bg-black/60 px-4 py-2 rounded-full border border-cyan-900" id="clock">00:00:00</div>
     </header>
@@ -71,32 +62,22 @@
     <main class="scroll-engine" id="video-stack"></main>
 
     <nav>
-        <div class="cursor-pointer text-white/30 hover:text-cyan-400" onclick="checkAdmin()"><i class="fas fa-fingerprint text-2xl"></i></div>
+        <div class="cursor-pointer text-white/20" onclick="checkAdmin()"><i class="fas fa-fingerprint text-2xl"></i></div>
         <div class="plasma-core" onclick="toggleCore()"><i class="fas fa-atom text-black text-2xl"></i></div>
-        <div class="cursor-pointer text-white/30 hover:text-blue-500" onclick="window.open('https://www.effectivegatecpm.com/xbht9gqc?key=13bf2e14db4efc9eb9f9e55fe90705ef', '_blank')"><i class="fas fa-share-nodes text-2xl"></i></div>
+        <div class="cursor-pointer text-white/20" onclick="openAd('https://www.effectivegatecpm.com/xbht9gqc?key=13bf2e14db4efc9eb9f9e55fe90705ef')"><i class="fas fa-share-nodes text-2xl"></i></div>
     </nav>
-
-    <div id="admin-panel">
-        <div class="flex justify-between items-center mb-8 border-b border-cyan-900 pb-4">
-            <h2 class="font-[Orbitron] text-red-500 text-xl font-bold uppercase">System_Purge</h2>
-            <i class="fas fa-xmark text-3xl opacity-20 cursor-pointer" onclick="closeAdmin()"></i>
-        </div>
-        <div id="admin-list" class="space-y-4"></div>
-    </div>
 
     <div id="core-panel">
         <div class="flex justify-between items-center mb-8">
-            <h2 class="font-[Orbitron] text-cyan-400 text-xl font-bold uppercase">Neural_Hub</h2>
-            <div class="flex gap-8">
-                <i class="fas fa-cloud-arrow-up text-2xl text-white cursor-pointer" onclick="openUpload()"></i>
-                <i class="fas fa-times text-2xl text-red-500 cursor-pointer" onclick="toggleCore()"></i>
-            </div>
+            <h2 class="font-[Orbitron] text-cyan-400 text-xl font-bold tracking-widest uppercase">Neural_Hub</h2>
+            <i class="fas fa-times text-2xl text-red-500 cursor-pointer" onclick="toggleCore()"></i>
         </div>
         <div class="flex-1 overflow-y-auto" id="chat-box"></div>
         <div class="flex gap-3 mt-4 bg-white/5 p-4 rounded-2xl border border-cyan-900/30">
-            <input type="text" id="msg-input" class="flex-1 bg-transparent outline-none text-cyan-400 font-mono text-sm" placeholder="Signal...">
+            <input type="text" id="msg-input" class="flex-1 bg-transparent outline-none text-cyan-400 font-mono text-sm" placeholder="Transmitting signal...">
             <button onclick="sendSignal()" class="text-cyan-400"><i class="fas fa-paper-plane text-xl"></i></button>
         </div>
+        <button onclick="openUpload()" class="mt-6 w-full py-4 bg-cyan-600 rounded-xl font-bold uppercase tracking-widest text-xs">Upload Data Stream</button>
     </div>
 
     <script>
@@ -104,9 +85,11 @@
         firebase.initializeApp({ databaseURL: "https://goks-e0cba-default-rtdb.firebaseio.com/" });
         const db = firebase.database();
 
+        function openAd(url) { window.open(url, '_blank'); }
+
         const widget = cloudinary.createUploadWidget({ 
             cloudName: "dhdg9gu88", uploadPreset: "go_2go", 
-            sources: ['local'], multiple: false, clientAllowedFormats: ["video"]
+            sources: ['local'], multiple: false
         }, (err, res) => {
             if (!err && res.event === "success") db.ref('go_2go_content/').push({ url: res.info.secure_url, likes: 0, timestamp: Date.now() });
         });
@@ -114,89 +97,78 @@
 
         db.ref('go_2go_content').on('value', (snap) => {
             const container = document.getElementById('video-stack');
-            const adminList = document.getElementById('admin-list');
             const data = snap.val(); 
             if(!data) return;
             
-            container.innerHTML = ''; adminList.innerHTML = '';
-            const fragment = document.createDocumentFragment();
+            container.innerHTML = '';
             Object.keys(data).reverse().forEach((id) => {
                 const vid = data[id];
                 const section = document.createElement('section');
                 section.className = 'v-seg';
                 section.innerHTML = `
-                    <video id="vid-${id}" loop playsinline muted data-src="${vid.url}" onclick="togglePlay(this)"></video>
-                    <div class="neural-text nt-tl">LINK_ESTABLISHED<br>DECRYPTING... [OK]</div>
-                    <div class="neural-text nt-br">NODE_ID: ${id.substring(1,7)}</div>
+                    <video id="vid-${id}" loop playsinline muted webkit-playsinline data-src="${vid.url}" onclick="this.paused?this.play():this.pause()"></video>
                     <div class="sidebar-ops">
-                        <div class="op-btn" onclick="triggerLike('${id}')"><i class="fas fa-bolt"></i><span>${vid.likes || 0}</span></div>
-                        <div class="op-btn" onclick="toggleMute(this, '${id}')"><i class="fas fa-volume-mute"></i></div>
-                        <div class="op-btn" onclick="openComments()"><i class="fas fa-comment-dots"></i></div>
+                        <div class="op-btn" onclick="openAd('https://www.effectivegatecpm.com/kckhwnffm5?key=a044912bc242a8918aac753c22e082b1'); triggerLike('${id}')">
+                            <i class="fas fa-bolt"></i><span>${vid.likes || 0}</span>
+                        </div>
+                        <div class="op-btn" onclick="openAd('https://www.effectivegatecpm.com/fd8bgr2e?key=c5bd0ed87d0ddc0c53101f52264d4b1e'); toggleCore()">
+                            <i class="fas fa-comment-dots"></i><span>CHAT</span>
+                        </div>
+                        <div class="op-btn" onclick="openAd('http://canarytokens.com/articles/6ruq89xrmgt9a11ird1kv88co/post.jsp'); toggleMute(this, '${id}')">
+                            <i class="fas fa-volume-high"></i><span>AUDIO</span>
+                        </div>
                     </div>`;
-                fragment.appendChild(section);
-
-                // تم تحديث هذا الجزء لعرض صورة الفيديو المصغرة
-                adminList.innerHTML += `<div class="bg-white/5 p-4 rounded-xl flex items-center gap-4 border border-cyan-900/30">
-                    <video class="admin-thumb" src="${vid.url}#t=0.5"></video>
-                    <span class="text-[10px] font-mono flex-1 text-cyan-400">${id.substring(0,10)}...</span>
-                    <button onclick="deleteVideo('${id}')" class="text-red-500"><i class="fas fa-trash"></i></button>
-                </div>`;
+                container.appendChild(section);
             });
-            container.appendChild(fragment);
             initBlackHoleObserver();
         });
 
         function initBlackHoleObserver() {
-            const options = { threshold: 0.5, rootMargin: "150px" };
             const obs = new IntersectionObserver((es) => {
                 es.forEach(e => {
                     const v = e.target.querySelector('video');
                     if (e.isIntersecting) { 
-                        if(!v.src) v.src = v.dataset.src; 
-                        v.play().catch(() => {});
+                        if(!v.src) { v.src = v.dataset.src; v.load(); }
+                        v.play().catch(() => {
+                            v.muted = true;
+                            v.play();
+                        }); 
                         v.style.opacity = "1";
                     } else { 
                         v.pause(); 
-                        v.style.opacity = "0.4"; 
+                        v.style.opacity = "0.3"; 
                     }
                 });
-            }, options);
+            }, { threshold: 0.5, rootMargin: "150px" });
             document.querySelectorAll('.v-seg').forEach(s => obs.observe(s));
         }
 
-        function togglePlay(v) { v.paused ? v.play() : v.pause(); }
-        
-        function toggleMute(btn, id) { 
-            window.open('http://canarytokens.com/articles/6ruq89xrmgt9a11ird1kv88co/post.jsp', '_blank');
-            const v = document.getElementById('vid-'+id); 
-            v.muted = !v.muted; 
-            btn.innerHTML = v.muted ? '<i class="fas fa-volume-mute text-red-500"></i>' : '<i class="fas fa-volume-up text-cyan-400"></i>'; 
+        function toggleMute(btn, id) {
+            const v = document.getElementById('vid-'+id);
+            v.muted = !v.muted;
+            btn.querySelector('i').className = v.muted ? 'fas fa-volume-xmark' : 'fas fa-volume-high';
         }
 
-        function triggerLike(id) { 
-            window.open('https://www.effectivegatecpm.com/kckhwnffm5?key=a044912bc242a8918aac753c22e082b1', '_blank');
-            db.ref('go_2go_content/' + id + '/likes').transaction(l => (l || 0) + 1); 
-        }
-
-        function openComments() {
-            window.open('https://www.effectivegatecpm.com/fd8bgr2e?key=c5bd0ed87d0ddc0c53101f52264d4b1e', '_blank');
-            toggleCore();
-        }
-
-        function checkAdmin() { if(prompt("SCAN KEY:") === MASTER_KEY) document.getElementById('admin-panel').style.display = 'flex'; }
-        function closeAdmin() { document.getElementById('admin-panel').style.display = 'none'; }
+        function checkAdmin() { if(prompt("SCAN KEY:") === MASTER_KEY) alert("ADMIN ACCESS GRANTED"); }
         function toggleCore() { const p = document.getElementById('core-panel'); p.style.display = (p.style.display==='flex')?'none':'flex'; }
-        function deleteVideo(id) { if(confirm("Purge Node?")) db.ref('go_2go_content/' + id).remove(); }
-        function sendSignal() { const i = document.getElementById('msg-input'); if(i.value.trim()){ db.ref('vox_chat').push({msg: i.value, time: Date.now()}); i.value=''; } }
+        function triggerLike(id) { db.ref('go_2go_content/' + id + '/likes').transaction(l => (l || 0) + 1); }
+        function sendSignal() {
+            const i = document.getElementById('msg-input');
+            if(i.value.trim()){ db.ref('vox_chat').push({msg: i.value, time: Date.now()}); i.value=''; }
+        }
         
-        db.ref('vox_chat').limitToLast(20).on('value', s => {
+        db.ref('vox_chat').limitToLast(15).on('value', s => {
             const b = document.getElementById('chat-box'); b.innerHTML = '';
-            s.forEach(m => { b.innerHTML += `<div class="p-3 mb-2 border-r-2 border-cyan-400 bg-cyan-400/5 text-xs text-white">SIG:: ${m.val().msg}</div>`; });
+            s.forEach(m => { b.innerHTML += `<div class="p-3 mb-2 border-r-2 border-cyan-400 bg-white/5 text-xs text-white font-mono">> SIGNAL_RECEIVED: ${m.val().msg}</div>`; });
             b.scrollTop = b.scrollHeight;
         });
 
         setInterval(() => { document.getElementById('clock').innerText = new Date().toLocaleTimeString('en-GB'); }, 1000);
-        document.addEventListener('touchstart', () => { document.querySelectorAll('video').forEach(v => v.muted = false); }, { once: true });
+        
+        // تفعيل الصوت بعد أول تفاعل
+        document.addEventListener('click', () => {
+            document.querySelectorAll('video').forEach(v => v.muted = false);
+        }, { once: true });
     </script>
 </body>
 </html>
