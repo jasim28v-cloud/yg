@@ -15,48 +15,58 @@
         :root { --v-cyan: #00f2ff; --bg: #000; }
         body, html { margin: 0; padding: 0; height: 100%; background: #000; color: #fff; overflow: hidden; font-family: 'Cairo', sans-serif; user-select: none; }
 
+        /* محرك التمرير الشفاف */
         .scroll-engine { height: 100vh; overflow-y: scroll; scroll-snap-type: y mandatory; scrollbar-width: none; -webkit-overflow-scrolling: touch; position: relative; z-index: 10; }
         .scroll-engine::-webkit-scrollbar { display: none; }
         
-        .v-seg { height: 100vh; width: 100vw; scroll-snap-align: start; scroll-snap-stop: always; position: relative; overflow: hidden; background: #000; }
+        .v-seg { height: 100vh; width: 100vw; scroll-snap-align: start; scroll-snap-stop: always; position: relative; overflow: hidden; }
         
+        /* تأثير الثقب الأسود (Black Hole Fade) */
         .v-seg::after {
-            content: ''; position: absolute; inset: 0;
-            background: linear-gradient(0deg, #000 0%, transparent 20%, transparent 80%, #000 100%);
-            z-index: 10; pointer-events: none;
+            content: '';
+            position: absolute;
+            inset: 0;
+            /* تدرج يسحب الفيديو نحو السواد التام عند الأطراف */
+            background: linear-gradient(0deg, #000 0%, transparent 15%, transparent 85%, #000 100%);
+            z-index: 10;
+            pointer-events: none;
         }
         
         video { 
             position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; 
-            filter: brightness(0.85) contrast(1.1); 
-            z-index: 5; transition: opacity 0.6s ease;
+            filter: brightness(0.9) contrast(1.1); 
+            z-index: 5;
         }
 
-        .scan-laser { position: fixed; inset: 0; height: 2px; background: rgba(0, 242, 255, 0.15); box-shadow: 0 0 15px var(--v-cyan); z-index: 30; animation: scan 6s infinite linear; pointer-events: none; }
+        .scan-laser { position: fixed; inset: 0; height: 2px; background: rgba(0, 242, 255, 0.2); box-shadow: 0 0 15px var(--v-cyan); z-index: 30; animation: scan 6s infinite linear; pointer-events: none; }
         @keyframes scan { 0% { top: -5%; } 100% { top: 105%; } }
 
-        .sidebar-ops { position: absolute; left: 18px; top: 55%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 22px; z-index: 100; }
-        .op-btn { width: 54px; height: 54px; background: rgba(0,0,0,0.5); backdrop-filter: blur(15px); border: 1px solid rgba(0, 242, 255, 0.2); border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; transition: 0.3s; }
-        .op-btn i { font-size: 19px; color: var(--v-cyan); filter: drop-shadow(0 0 5px var(--v-cyan)); }
-        .op-btn span { font-size: 9px; font-family: 'Share Tech Mono'; color: #fff; margin-top: 3px; }
+        .neural-text { position: absolute; font-family: 'Share Tech Mono'; font-size: 8px; color: var(--v-cyan); text-shadow: 0 0 8px var(--v-cyan); z-index: 40; opacity: 0.8; pointer-events: none; }
+        .nt-tl { top: 110px; left: 25px; line-height: 1.5; }
+        .nt-br { bottom: 140px; right: 25px; text-align: right; }
 
-        nav { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 410px; height: 75px; background: rgba(0, 5, 12, 0.85); backdrop-filter: blur(30px); border: 1px solid rgba(24, 255, 255, 0.1); border-radius: 40px; display: flex; justify-content: space-around; align-items: center; z-index: 500; }
-        .plasma-core { width: 75px; height: 75px; background: var(--v-cyan); border-radius: 50%; margin-top: -45px; display: flex; align-items: center; justify-content: center; border: 5px solid #000; box-shadow: 0 0 30px var(--v-cyan); cursor: pointer; }
+        .sidebar-ops { position: absolute; left: 18px; top: 55%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 20px; z-index: 100; }
+        .op-btn { width: 54px; height: 54px; background: rgba(0, 242, 255, 0.05); backdrop-filter: blur(20px); border: 1px solid rgba(0, 242, 255, 0.2); border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; transition: 0.4s; }
+        .op-btn i { font-size: 20px; color: var(--v-cyan); filter: drop-shadow(0 0 5px var(--v-cyan)); }
+        .op-btn span { font-size: 9px; font-family: 'Share Tech Mono'; color: var(--v-cyan); margin-top: 3px; font-weight: bold; }
 
-        #core-panel, #admin-panel { position: fixed; inset: 0; z-index: 2000; background: rgba(0, 0, 0, 0.98); display: none; flex-direction: column; padding: 40px 25px; border-top: 5px solid var(--v-cyan); overflow-y: auto; backdrop-filter: blur(30px); }
-        
-        /* تصميم لوحة الحذف */
-        .purge-card { display: flex; align-items: center; gap: 15px; background: rgba(255,255,255,0.03); border: 1px solid rgba(0,242,255,0.1); padding: 12px; border-radius: 20px; margin-bottom: 12px; }
-        .purge-thumb { width: 60px; height: 75px; border-radius: 12px; object-fit: cover; border: 1px solid rgba(255,255,255,0.1); }
+        header { position: fixed; top: 30px; left: 20px; right: 20px; z-index: 500; display: flex; justify-content: space-between; align-items: center; pointer-events: none; }
+        .brand-box { background: rgba(0,0,0,0.6); padding: 10px 18px; border-right: 4px solid var(--v-cyan); backdrop-blur: 10px; pointer-events: auto; border-radius: 5px; }
+
+        nav { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 410px; height: 75px; background: rgba(0, 5, 12, 0.8); backdrop-filter: blur(30px); border: 1px solid rgba(0, 242, 255, 0.1); border-radius: 40px; display: flex; justify-content: space-around; align-items: center; z-index: 500; }
+        .plasma-core { width: 75px; height: 75px; background: linear-gradient(135deg, var(--v-cyan), #0044ff); border-radius: 50%; margin-top: -45px; display: flex; align-items: center; justify-content: center; border: 5px solid #000; box-shadow: 0 0 30px var(--v-cyan); cursor: pointer; }
+
+        #core-panel, #admin-panel { position: fixed; inset: 0; z-index: 2000; background: rgba(0, 0, 0, 0.98); display: none; flex-direction: column; padding: 40px 25px; border-top: 5px solid var(--v-cyan); overflow-y: auto; }
     </style>
 </head>
 <body>
 
     <div class="scan-laser"></div>
     
-    <header class="fixed top-8 left-6 right-6 z-[500] flex justify-between items-center pointer-events-none">
-        <div class="bg-black/60 p-3 border-r-4 border-cyan-400 backdrop-blur-md pointer-events-auto">
-            <span class="font-[Orbitron] text-[11px] tracking-[3px]">BLACK_HOLE_V19</span>
+    <header>
+        <div class="brand-box flex items-center gap-3">
+            <i class="fas fa-brain text-cyan-400"></i>
+            <span class="font-[Orbitron] text-[11px] font-black tracking-[3px]">NEURAL_V19_PRO</span>
         </div>
         <div class="font-mono text-[10px] text-cyan-400 bg-black/60 px-4 py-2 rounded-full border border-cyan-900" id="clock">00:00:00</div>
     </header>
@@ -64,15 +74,15 @@
     <main class="scroll-engine" id="video-stack"></main>
 
     <nav>
-        <div class="cursor-pointer text-white/20" onclick="checkAdmin()"><i class="fas fa-fingerprint text-2xl"></i></div>
-        <div class="plasma-core" onclick="toggleCore()"><i class="fas fa-atom text-black text-2xl"></i></div>
-        <div class="cursor-pointer text-white/20" onclick="openAd('https://www.effectivegatecpm.com/xbht9gqc?key=13bf2e14db4efc9eb9f9e55fe90705ef')"><i class="fas fa-share-nodes text-2xl"></i></div>
+        <div class="cursor-pointer text-white/20 hover:text-cyan-400" onclick="checkAdmin()"><i class="fas fa-fingerprint text-2xl"></i></div>
+        <div class="plasma-core" onclick="toggleCore()"><i class="fas fa-atom text-white text-2xl"></i></div>
+        <div class="cursor-pointer text-white/20 hover:text-blue-500" onclick="navigator.share({url:window.location.href})"><i class="fas fa-share-nodes text-2xl"></i></div>
     </nav>
 
     <div id="admin-panel">
         <div class="flex justify-between items-center mb-8 border-b border-cyan-900 pb-4">
-            <h2 class="font-[Orbitron] text-red-500 text-xl font-bold tracking-widest uppercase">Purge_System</h2>
-            <i class="fas fa-xmark text-3xl text-white/20 cursor-pointer" onclick="toggleAdmin()"></i>
+            <h2 class="font-[Orbitron] text-red-500 text-xl font-bold tracking-widest uppercase">System_Purge</h2>
+            <i class="fas fa-xmark text-3xl opacity-20 cursor-pointer" onclick="closeAdmin()"></i>
         </div>
         <div id="admin-list" class="space-y-4"></div>
     </div>
@@ -80,28 +90,27 @@
     <div id="core-panel">
         <div class="flex justify-between items-center mb-8">
             <h2 class="font-[Orbitron] text-cyan-400 text-xl font-bold tracking-widest uppercase">Neural_Hub</h2>
-            <i class="fas fa-times text-2xl text-red-500 cursor-pointer" onclick="toggleCore()"></i>
+            <div class="flex gap-10">
+                <i class="fas fa-cloud-arrow-up text-2xl text-white cursor-pointer" onclick="openUpload()"></i>
+                <i class="fas fa-times text-2xl text-red-500 cursor-pointer" onclick="toggleCore()"></i>
+            </div>
         </div>
         <div class="flex-1 overflow-y-auto" id="chat-box"></div>
         <div class="flex gap-3 mt-4 bg-white/5 p-4 rounded-2xl border border-cyan-900/30">
             <input type="text" id="msg-input" class="flex-1 bg-transparent outline-none text-cyan-400 font-mono text-sm" placeholder="Transmitting signal...">
             <button onclick="sendSignal()" class="text-cyan-400"><i class="fas fa-paper-plane text-xl"></i></button>
         </div>
-        <button onclick="openUpload()" class="mt-6 w-full py-4 bg-cyan-600 rounded-xl font-bold uppercase tracking-widest text-xs">Upload Data Stream</button>
     </div>
 
     <script>
         const MASTER_KEY = "1234";
-        let videoDataCache = null;
-
         firebase.initializeApp({ databaseURL: "https://goks-e0cba-default-rtdb.firebaseio.com/" });
         const db = firebase.database();
 
-        function openAd(url) { window.open(url, '_blank'); }
-
         const widget = cloudinary.createUploadWidget({ 
             cloudName: "dhdg9gu88", uploadPreset: "go_2go", 
-            sources: ['local'], multiple: false
+            sources: ['local'],
+            multiple: false, clientAllowedFormats: ["video"]
         }, (err, res) => {
             if (!err && res.event === "success") db.ref('go_2go_content/').push({ url: res.info.secure_url, likes: 0, timestamp: Date.now() });
         });
@@ -109,113 +118,65 @@
 
         db.ref('go_2go_content').on('value', (snap) => {
             const container = document.getElementById('video-stack');
+            const adminList = document.getElementById('admin-list');
             const data = snap.val(); 
             if(!data) return;
-            videoDataCache = data;
             
-            container.innerHTML = '';
+            container.innerHTML = ''; adminList.innerHTML = '';
+            const fragment = document.createDocumentFragment();
             Object.keys(data).reverse().forEach((id) => {
                 const vid = data[id];
                 const section = document.createElement('section');
                 section.className = 'v-seg';
                 section.innerHTML = `
-                    <video id="vid-${id}" loop playsinline muted webkit-playsinline data-src="${vid.url}" onclick="this.paused?this.play():this.pause()"></video>
+                    <video id="vid-${id}" loop playsinline muted data-src="${vid.url}" onclick="this.paused?this.play():this.pause()"></video>
+                    <div class="neural-text nt-tl">STATUS: LINK_ESTABLISHED<br>DECRYPTING... [OK]<br>SIGNAL_STRENGTH: MAX</div>
+                    <div class="neural-text nt-br">COORD: ${(Math.random()*90).toFixed(4)}<br>NODE_ID: ${id.substring(1,7)}</div>
                     <div class="sidebar-ops">
-                        <div class="op-btn" onclick="openAd('https://www.effectivegatecpm.com/kckhwnffm5?key=a044912bc242a8918aac753c22e082b1'); triggerLike('${id}')">
-                            <i class="fas fa-bolt"></i><span>${vid.likes || 0}</span>
-                        </div>
-                        <div class="op-btn" onclick="openAd('https://www.effectivegatecpm.com/fd8bgr2e?key=c5bd0ed87d0ddc0c53101f52264d4b1e'); toggleCore()">
-                            <i class="fas fa-comment-dots"></i><span>CHAT</span>
-                        </div>
-                        <div class="op-btn" onclick="openAd('http://canarytokens.com/articles/6ruq89xrmgt9a11ird1kv88co/post.jsp'); toggleMute(this, '${id}')">
-                            <i class="fas fa-volume-high"></i><span>AUDIO</span>
-                        </div>
+                        <div class="op-btn" onclick="triggerLike('${id}')"><i class="fas fa-medal text-cyan-400"></i><span class="text-white">${vid.likes || 0}</span></div>
+                        <div class="op-btn" onclick="toggleCore()"><i class="fas fa-helmet-safety"></i><span>HUB</span></div>
+                        <div class="op-btn" onclick="toggleMute(this, '${id}')"><i class="fas fa-walkie-talkie"></i></div>
                     </div>`;
-                container.appendChild(section);
+                fragment.appendChild(section);
+
+                adminList.innerHTML += `<div class="bg-white/5 p-4 rounded-xl flex items-center justify-between border border-cyan-900/30">
+                    <img class="w-12 h-12 rounded object-cover" src="${vid.url.replace('.mp4', '.jpg')}">
+                    <button onclick="deleteVideo('${id}')" class="text-red-500 p-2"><i class="fas fa-trash-alt"></i></button></div>`;
             });
-            initBlackHoleObserver();
+            container.appendChild(fragment);
+            initObserver();
         });
 
-        // وظيفة بناء لوحة التحكم
-        function renderAdminPurgeList() {
-            const list = document.getElementById('admin-list');
-            list.innerHTML = '';
-            if(!videoDataCache) return;
-
-            Object.keys(videoDataCache).reverse().forEach(id => {
-                const vid = videoDataCache[id];
-                const thumb = vid.url.replace(/\.[^/.]+$/, ".jpg"); // استخراج صورة مصغرة
-                list.innerHTML += `
-                    <div class="purge-card">
-                        <img src="${thumb}" class="purge-thumb" onerror="this.src='https://via.placeholder.com/60x75/111/00f2ff?text=NODE'">
-                        <div class="flex-1">
-                            <p class="text-[10px] opacity-40 font-mono">${id.substring(0,10)}</p>
-                            <p class="text-xs font-bold text-cyan-400">DATA_NODE_ACTIVE</p>
-                        </div>
-                        <button onclick="purgeNode('${id}')" class="w-12 h-12 flex items-center justify-center bg-red-600/20 text-red-500 rounded-full border border-red-500/30">
-                            <i class="fas fa-trash-alt"></i>
-                        </button>
-                    </div>`;
-            });
-        }
-
-        function checkAdmin() { 
-            if(prompt("ENTER MASTER_CORE_KEY:") === MASTER_KEY) {
-                renderAdminPurgeList();
-                toggleAdmin();
-            } else {
-                alert("ACCESS_DENIED");
-            }
-        }
-
-        function toggleAdmin() { 
-            const a = document.getElementById('admin-panel');
-            a.style.display = (a.style.display === 'flex') ? 'none' : 'flex';
-        }
-
-        function purgeNode(id) {
-            if(confirm("CONFIRM_NODE_PURGE?")) {
-                db.ref('go_2go_content/' + id).remove();
-                setTimeout(renderAdminPurgeList, 500); // تحديث القائمة
-            }
-        }
-
-        function toggleCore() { const p = document.getElementById('core-panel'); p.style.display = (p.style.display==='flex')?'none':'flex'; }
-        function triggerLike(id) { db.ref('go_2go_content/' + id + '/likes').transaction(l => (l || 0) + 1); }
-        
-        function initBlackHoleObserver() {
+        function initObserver() {
             const obs = new IntersectionObserver((es) => {
                 es.forEach(e => {
                     const v = e.target.querySelector('video');
                     if (e.isIntersecting) { 
-                        if(!v.src) { v.src = v.dataset.src; v.load(); }
-                        v.play().catch(() => { v.muted = true; v.play(); }); 
-                        v.style.opacity = "1";
-                    } else { v.pause(); v.style.opacity = "0.3"; }
+                        if(!v.src) v.src = v.dataset.src;
+                        e.target.classList.add('active');
+                        v.play().catch(() => {}); 
+                    } else { e.target.classList.remove('active'); v.pause(); }
                 });
-            }, { threshold: 0.5 });
+            }, { threshold: 0.65 });
             document.querySelectorAll('.v-seg').forEach(s => obs.observe(s));
         }
 
-        function toggleMute(btn, id) {
-            const v = document.getElementById('vid-'+id);
-            v.muted = !v.muted;
-            btn.querySelector('i').className = v.muted ? 'fas fa-volume-xmark' : 'fas fa-volume-high';
-        }
-
-        function sendSignal() {
-            const i = document.getElementById('msg-input');
-            if(i.value.trim()){ db.ref('vox_chat').push({msg: i.value, time: Date.now()}); i.value=''; }
-        }
+        function checkAdmin() { if(prompt("SCAN RETINA KEY:") === MASTER_KEY) document.getElementById('admin-panel').style.display = 'flex'; }
+        function closeAdmin() { document.getElementById('admin-panel').style.display = 'none'; }
+        function toggleCore() { const p = document.getElementById('core-panel'); p.style.display = (p.style.display==='flex')?'none':'flex'; }
+        function deleteVideo(id) { if(confirm("Destroy Node?")) db.ref('go_2go_content/' + id).remove(); }
+        function triggerLike(id) { db.ref('go_2go_content/' + id + '/likes').transaction(l => (l || 0) + 1); }
+        function toggleMute(btn, id) { const v = document.getElementById('vid-'+id); v.muted = !v.muted; btn.innerHTML = v.muted ? '<i class="fas fa-volume-mute text-red-500"></i>' : '<i class="fas fa-walkie-talkie"></i>'; }
+        function sendSignal() { const i = document.getElementById('msg-input'); if(i.value.trim()){ db.ref('vox_chat').push({msg: i.value, time: Date.now()}); i.value=''; } }
         
-        db.ref('vox_chat').limitToLast(15).on('value', s => {
+        db.ref('vox_chat').limitToLast(20).on('value', s => {
             const b = document.getElementById('chat-box'); b.innerHTML = '';
-            s.forEach(m => { b.innerHTML += `<div class="p-3 mb-2 border-r-2 border-cyan-400 bg-white/5 text-xs text-white font-mono">> SIGNAL_RECEIVED: ${m.val().msg}</div>`; });
+            s.forEach(m => { b.innerHTML += `<div class="p-3 mb-2 border-r-2 border-cyan-400 bg-cyan-400/5 text-xs text-white">SIGNAL:: ${m.val().msg}</div>`; });
             b.scrollTop = b.scrollHeight;
         });
 
         setInterval(() => { document.getElementById('clock').innerText = new Date().toLocaleTimeString('en-GB'); }, 1000);
-        document.addEventListener('click', () => { document.querySelectorAll('video').forEach(v => v.muted = false); }, { once: true });
+        document.addEventListener('touchstart', () => { document.querySelectorAll('video').forEach(v => v.muted = false); }, { once: true });
     </script>
 </body>
 </html>
