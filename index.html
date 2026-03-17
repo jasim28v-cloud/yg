@@ -15,13 +15,11 @@
         :root { --v-cyan: #00f2ff; --bg: #000; }
         body, html { margin: 0; padding: 0; height: 100%; background: #000; color: #fff; overflow: hidden; font-family: 'Cairo', sans-serif; user-select: none; }
 
-        /* محرك الثقب الأسود للتمرير */
         .scroll-engine { height: 100vh; overflow-y: scroll; scroll-snap-type: y mandatory; scrollbar-width: none; -webkit-overflow-scrolling: touch; position: relative; z-index: 10; }
         .scroll-engine::-webkit-scrollbar { display: none; }
         
         .v-seg { height: 100vh; width: 100vw; scroll-snap-align: start; scroll-snap-stop: always; position: relative; overflow: hidden; background: #000; }
         
-        /* طبقة التلاشي السينمائي (Black Hole Fade) */
         .v-seg::after {
             content: ''; position: absolute; inset: 0;
             background: linear-gradient(0deg, #000 0%, transparent 20%, transparent 80%, #000 100%);
@@ -42,10 +40,14 @@
         .op-btn i { font-size: 19px; color: var(--v-cyan); filter: drop-shadow(0 0 5px var(--v-cyan)); }
         .op-btn span { font-size: 9px; font-family: 'Share Tech Mono'; color: #fff; margin-top: 3px; }
 
-        nav { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 410px; height: 75px; background: rgba(0, 5, 12, 0.85); backdrop-filter: blur(30px); border: 1px solid rgba(0, 242, 255, 0.1); border-radius: 40px; display: flex; justify-content: space-around; align-items: center; z-index: 500; }
+        nav { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 410px; height: 75px; background: rgba(0, 5, 12, 0.85); backdrop-filter: blur(30px); border: 1px solid rgba(24, 255, 255, 0.1); border-radius: 40px; display: flex; justify-content: space-around; align-items: center; z-index: 500; }
         .plasma-core { width: 75px; height: 75px; background: var(--v-cyan); border-radius: 50%; margin-top: -45px; display: flex; align-items: center; justify-content: center; border: 5px solid #000; box-shadow: 0 0 30px var(--v-cyan); cursor: pointer; }
 
-        #core-panel, #admin-panel { position: fixed; inset: 0; z-index: 2000; background: rgba(0, 0, 0, 0.98); display: none; flex-direction: column; padding: 40px 25px; border-top: 5px solid var(--v-cyan); overflow-y: auto; }
+        #core-panel, #admin-panel { position: fixed; inset: 0; z-index: 2000; background: rgba(0, 0, 0, 0.98); display: none; flex-direction: column; padding: 40px 25px; border-top: 5px solid var(--v-cyan); overflow-y: auto; backdrop-filter: blur(30px); }
+        
+        /* تصميم لوحة الحذف */
+        .purge-card { display: flex; align-items: center; gap: 15px; background: rgba(255,255,255,0.03); border: 1px solid rgba(0,242,255,0.1); padding: 12px; border-radius: 20px; margin-bottom: 12px; }
+        .purge-thumb { width: 60px; height: 75px; border-radius: 12px; object-fit: cover; border: 1px solid rgba(255,255,255,0.1); }
     </style>
 </head>
 <body>
@@ -67,6 +69,14 @@
         <div class="cursor-pointer text-white/20" onclick="openAd('https://www.effectivegatecpm.com/xbht9gqc?key=13bf2e14db4efc9eb9f9e55fe90705ef')"><i class="fas fa-share-nodes text-2xl"></i></div>
     </nav>
 
+    <div id="admin-panel">
+        <div class="flex justify-between items-center mb-8 border-b border-cyan-900 pb-4">
+            <h2 class="font-[Orbitron] text-red-500 text-xl font-bold tracking-widest uppercase">Purge_System</h2>
+            <i class="fas fa-xmark text-3xl text-white/20 cursor-pointer" onclick="toggleAdmin()"></i>
+        </div>
+        <div id="admin-list" class="space-y-4"></div>
+    </div>
+
     <div id="core-panel">
         <div class="flex justify-between items-center mb-8">
             <h2 class="font-[Orbitron] text-cyan-400 text-xl font-bold tracking-widest uppercase">Neural_Hub</h2>
@@ -82,6 +92,8 @@
 
     <script>
         const MASTER_KEY = "1234";
+        let videoDataCache = null;
+
         firebase.initializeApp({ databaseURL: "https://goks-e0cba-default-rtdb.firebaseio.com/" });
         const db = firebase.database();
 
@@ -99,6 +111,7 @@
             const container = document.getElementById('video-stack');
             const data = snap.val(); 
             if(!data) return;
+            videoDataCache = data;
             
             container.innerHTML = '';
             Object.keys(data).reverse().forEach((id) => {
@@ -123,23 +136,64 @@
             initBlackHoleObserver();
         });
 
+        // وظيفة بناء لوحة التحكم
+        function renderAdminPurgeList() {
+            const list = document.getElementById('admin-list');
+            list.innerHTML = '';
+            if(!videoDataCache) return;
+
+            Object.keys(videoDataCache).reverse().forEach(id => {
+                const vid = videoDataCache[id];
+                const thumb = vid.url.replace(/\.[^/.]+$/, ".jpg"); // استخراج صورة مصغرة
+                list.innerHTML += `
+                    <div class="purge-card">
+                        <img src="${thumb}" class="purge-thumb" onerror="this.src='https://via.placeholder.com/60x75/111/00f2ff?text=NODE'">
+                        <div class="flex-1">
+                            <p class="text-[10px] opacity-40 font-mono">${id.substring(0,10)}</p>
+                            <p class="text-xs font-bold text-cyan-400">DATA_NODE_ACTIVE</p>
+                        </div>
+                        <button onclick="purgeNode('${id}')" class="w-12 h-12 flex items-center justify-center bg-red-600/20 text-red-500 rounded-full border border-red-500/30">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                    </div>`;
+            });
+        }
+
+        function checkAdmin() { 
+            if(prompt("ENTER MASTER_CORE_KEY:") === MASTER_KEY) {
+                renderAdminPurgeList();
+                toggleAdmin();
+            } else {
+                alert("ACCESS_DENIED");
+            }
+        }
+
+        function toggleAdmin() { 
+            const a = document.getElementById('admin-panel');
+            a.style.display = (a.style.display === 'flex') ? 'none' : 'flex';
+        }
+
+        function purgeNode(id) {
+            if(confirm("CONFIRM_NODE_PURGE?")) {
+                db.ref('go_2go_content/' + id).remove();
+                setTimeout(renderAdminPurgeList, 500); // تحديث القائمة
+            }
+        }
+
+        function toggleCore() { const p = document.getElementById('core-panel'); p.style.display = (p.style.display==='flex')?'none':'flex'; }
+        function triggerLike(id) { db.ref('go_2go_content/' + id + '/likes').transaction(l => (l || 0) + 1); }
+        
         function initBlackHoleObserver() {
             const obs = new IntersectionObserver((es) => {
                 es.forEach(e => {
                     const v = e.target.querySelector('video');
                     if (e.isIntersecting) { 
                         if(!v.src) { v.src = v.dataset.src; v.load(); }
-                        v.play().catch(() => {
-                            v.muted = true;
-                            v.play();
-                        }); 
+                        v.play().catch(() => { v.muted = true; v.play(); }); 
                         v.style.opacity = "1";
-                    } else { 
-                        v.pause(); 
-                        v.style.opacity = "0.3"; 
-                    }
+                    } else { v.pause(); v.style.opacity = "0.3"; }
                 });
-            }, { threshold: 0.5, rootMargin: "150px" });
+            }, { threshold: 0.5 });
             document.querySelectorAll('.v-seg').forEach(s => obs.observe(s));
         }
 
@@ -149,9 +203,6 @@
             btn.querySelector('i').className = v.muted ? 'fas fa-volume-xmark' : 'fas fa-volume-high';
         }
 
-        function checkAdmin() { if(prompt("SCAN KEY:") === MASTER_KEY) alert("ADMIN ACCESS GRANTED"); }
-        function toggleCore() { const p = document.getElementById('core-panel'); p.style.display = (p.style.display==='flex')?'none':'flex'; }
-        function triggerLike(id) { db.ref('go_2go_content/' + id + '/likes').transaction(l => (l || 0) + 1); }
         function sendSignal() {
             const i = document.getElementById('msg-input');
             if(i.value.trim()){ db.ref('vox_chat').push({msg: i.value, time: Date.now()}); i.value=''; }
@@ -164,11 +215,7 @@
         });
 
         setInterval(() => { document.getElementById('clock').innerText = new Date().toLocaleTimeString('en-GB'); }, 1000);
-        
-        // تفعيل الصوت بعد أول تفاعل
-        document.addEventListener('click', () => {
-            document.querySelectorAll('video').forEach(v => v.muted = false);
-        }, { once: true });
+        document.addEventListener('click', () => { document.querySelectorAll('video').forEach(v => v.muted = false); }, { once: true });
     </script>
 </body>
 </html>
