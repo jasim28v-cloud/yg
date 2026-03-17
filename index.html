@@ -53,8 +53,8 @@
 
         #core-panel, #admin-panel { position: fixed; inset: 0; z-index: 2000; background: rgba(0, 0, 0, 0.98); display: none; flex-direction: column; padding: 40px 25px; border-top: 4px solid var(--v-cyan); overflow-y: auto; }
         
-        /* تصميم مصغر الفيديو في لوحة التحكم */
-        .admin-vid-thumb { width: 60px; height: 80px; object-fit: cover; border-radius: 8px; border: 1px solid var(--v-cyan); background: #111; }
+        /* تصميم صورة الفيديو المصغرة في لوحة التحكم */
+        .admin-thumb { width: 50px; height: 50px; object-fit: cover; border-radius: 8px; border: 1px solid var(--v-cyan); }
     </style>
 </head>
 <body>
@@ -135,14 +135,11 @@
                     </div>`;
                 fragment.appendChild(section);
 
-                // إضافة الفيديو داخل قائمة الإدارة
-                adminList.innerHTML += `<div class="bg-white/5 p-3 rounded-xl flex items-center gap-4 border border-cyan-900/30">
-                    <video class="admin-vid-thumb" src="${vid.url}#t=0.5" muted></video>
-                    <div class="flex-1 overflow-hidden">
-                        <span class="text-[10px] font-mono block text-cyan-400 mb-1">NODE_ID: ${id.substring(0,8)}</span>
-                        <span class="text-[9px] text-white/40 block">${new Date(vid.timestamp).toLocaleString('ar-EG')}</span>
-                    </div>
-                    <button onclick="deleteVideo('${id}')" class="text-red-500 p-2"><i class="fas fa-trash"></i></button>
+                // تم تحديث هذا الجزء لعرض صورة الفيديو المصغرة
+                adminList.innerHTML += `<div class="bg-white/5 p-4 rounded-xl flex items-center gap-4 border border-cyan-900/30">
+                    <video class="admin-thumb" src="${vid.url}#t=0.5"></video>
+                    <span class="text-[10px] font-mono flex-1 text-cyan-400">${id.substring(0,10)}...</span>
+                    <button onclick="deleteVideo('${id}')" class="text-red-500"><i class="fas fa-trash"></i></button>
                 </div>`;
             });
             container.appendChild(fragment);
